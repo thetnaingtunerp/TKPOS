@@ -205,8 +205,8 @@ class POSApp(tb.Window):
                 # item_values add to cart table with the input quantity
                 item_name = item_values[1]
                 item_price = item_values[2]
-                total_price = float(item_price.replace("$", "")) * int(quantity)
-                self.cart_table._build_table_rows(rowdata=[[item_name, item_price, quantity, f"${total_price:.2f}"]])
+                total_price = float(item_price.replace("", "")) * int(quantity)
+                self.cart_table._build_table_rows(rowdata=[[item_name, item_price, quantity, f"{total_price:.2f}"]])
                 # self.update_totals()
                 
                 input_entry.destroy()  # Remove the Entry widget after capturing input
@@ -218,24 +218,24 @@ class POSApp(tb.Window):
             discount_percent = float(self.discount_entry.get())
             delivery_charge = float(self.delivery_entry.get())
 
-            print(f"Applying Discount: {discount_percent}%, Delivery Charge: ${delivery_charge:.2f}")
+            print(f"Applying Discount: {discount_percent}%, Delivery Charge: {delivery_charge:.2f}")
 
             total = 0.0
 
             # ✅ Correct way: loop through Treeview rows
             for item_id in self.cart_table.view.get_children():
                 row = self.cart_table.view.item(item_id, "values")
-                total += float(row[3].replace("$", ""))
+                total += float(row[3].replace("", ""))
 
             print(f"Calculated Total: ${total:.2f}")
 
             # Apply discount
-            discount_amount = total * (discount_percent / 100)
-            final_total = total - discount_amount + delivery_charge
+            # discount_amount = total * (discount_percent / 100)
+            final_total = total - discount_percent + delivery_charge
 
             # Update UI
-            self.total_label.config(text=f"Total: ${total:.2f}")
-            self.final_total_label.config(text=f"Final Total: ${final_total:.2f}")
+            self.total_label.config(text=f"Total: {total:.2f}")
+            self.final_total_label.config(text=f"Final Total: {final_total:.2f}")
 
         except Exception as e:
             print(f"Error calculating totals: {e}")
